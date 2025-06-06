@@ -1,12 +1,27 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Parameters for ThorNetLab Ubuntu VM deployment. Update sshPublicKey with your actual SSH public key before deploying."
+  },
   "parameters": {
+    "location": {
+      "value": "East US"
+    },
     "vmName": {
       "value": "thornetlab-ubuntu"
     },
     "adminUsername": {
-      "value": "admin"
+      "value": "azureuser"
+    },
+    "sshPublicKey": {
+      "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC... YOUR_SSH_PUBLIC_KEY_HERE"
+    },
+    "vmSize": {
+      "value": "Standard_B2s"
+    },
+    "enablePublicIP": {
+      "value": true
     }
   }
 }
