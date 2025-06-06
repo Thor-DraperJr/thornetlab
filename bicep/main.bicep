@@ -1,8 +1,6 @@
 param location string = resourceGroup().location
 param vmName string = 'thornetlab-ubuntu'
 param adminUsername string = 'admin'
-@secure()
-param adminPassword string
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
   name: '${vmName}-nic'
@@ -25,6 +23,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
 resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: vmName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     hardwareProfile: {
       vmSize: 'Standard_B2s'
@@ -32,9 +33,8 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
     osProfile: {
       computerName: vmName
       adminUsername: adminUsername
-      adminPassword: adminPassword
       linuxConfiguration: {
-        disablePasswordAuthentication: false
+        disablePasswordAuthentication: true
       }
     }
     storageProfile: {
