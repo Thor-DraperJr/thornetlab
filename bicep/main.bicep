@@ -1,5 +1,5 @@
-@description('Azure region for all resources')
-param location string = resourceGroup().location
+@description('Azure region for all resources (restricted to East US 2)')
+param location string = 'eastus2'
 
 @description('Virtual machine name')
 param vmName string = 'thornetlab-ubuntu'
@@ -169,6 +169,21 @@ resource mdeInstall 'Microsoft.Compute/virtualMachines/extensions@2023-03-01' = 
       ]
       commandToExecute: 'bash install_mde.sh'
     }
+  }
+}
+
+// Auto-shutdown schedule for VM
+resource vmShutdown 'Microsoft.DevTestLab/schedules@2018-09-15' = {
+  name: 'shutdown-computevm-${vmName}'
+  location: location
+  properties: {
+    status: 'Enabled'
+    taskType: 'ComputeVmShutdownTask'
+    dailyRecurrence: {
+      time: '19:00'
+    }
+    timeZoneId: 'Eastern Standard Time'
+    targetResourceId: vm.id
   }
 }
 
