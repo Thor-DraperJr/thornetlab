@@ -1,0 +1,21 @@
+# Bicep build artifacts
+*.json
+!*parameters*.json
+
+# IDE
+.vscode/
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Azure
+.azure/
