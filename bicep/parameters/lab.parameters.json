@@ -7,9 +7,6 @@
     },
     "adminUsername": {
       "value": "admin"
-    },
-    "adminPassword": {
-      "value": "YourStrongPassword123!"
     }
   }
 }
