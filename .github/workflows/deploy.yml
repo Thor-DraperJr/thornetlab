@@ -1,0 +1,79 @@
+# GitHub Actions Workflow for Azure Lab Deployment with OIDC
+#
+# This workflow deploys the ThorNetLab Azure security lab environment using Bicep templates
+# with secure OIDC authentication (no secrets stored in GitHub).
+#
+# REQUIRED SETUP:
+# 
+# 1. Configure Azure OIDC with your GitHub repository:
+#    https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure-with-oidc
+#
+# 2. Add the following secrets to your GitHub repository:
+#    - AZURE_CLIENT_ID: Client ID of the Azure AD application
+#    - AZURE_TENANT_ID: Azure AD tenant ID  
+#    - AZURE_SUBSCRIPTION_ID: Azure subscription ID
+#
+# 3. Ensure the Azure AD application has Contributor permissions on the target subscription
+#
+# The workflow uses the parameters file bicep/parameters/lab.parameters.json and deploys
+# to the thornetlab-rg resource group in East US 2.
+
+name: Deploy to Azure with OIDC
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create Resource Group if not exists
+        run: |
+          if ! az group show --name thornetlab-rg &>/dev/null; then
+            echo "Creating resource group thornetlab-rg..."
+            az group create \
+              --name thornetlab-rg \
+              --location "East US 2" \
+              --tags project=thornetlab environment=lab
+            echo "✅ Resource group created successfully"
+          else
+            echo "✅ Resource group thornetlab-rg already exists"
+          fi
+
+      - name: Deploy Bicep template
+        run: |
+          echo "🚀 Starting deployment of Bicep template..."
+          az deployment group create \
+            --resource-group thornetlab-rg \
+            --template-file bicep/main.bicep \
+            --parameters @bicep/parameters/lab.parameters.json
+          echo "✅ Bicep template deployed successfully"
+
+      - name: Display deployment outputs
+        run: |
+          echo "✅ Lab deployment completed successfully!"
+          echo ""
+          echo "📍 Location: East US 2"
+          echo "🏗️  Resource Group: thornetlab-rg"
+          echo "🕕 Auto-shutdown: 7:00 PM EST daily"
+          echo ""
+          echo "🔗 Check the Azure portal for deployment outputs including SSH connection details."
+          echo "🔑 Use your SSH private key to connect to the deployed VM"
