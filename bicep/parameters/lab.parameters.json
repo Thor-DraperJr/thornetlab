@@ -5,9 +5,6 @@
     "description": "Parameters for ThorNetLab Ubuntu VM deployment. Update sshPublicKey with your actual SSH public key before deploying."
   },
   "parameters": {
-    "location": {
-      "value": "East US"
-    },
     "vmName": {
       "value": "thornetlab-ubuntu"
     },

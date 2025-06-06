@@ -14,12 +14,13 @@ This directory contains the complete Bicep Infrastructure as Code (IaC) solution
   - SSH key authentication (password authentication disabled)
   - Premium SSD storage
   - Microsoft Defender for Endpoint (MDE) extension
+  - Auto-shutdown at 7:00 PM EST daily
 
 ## Parameters
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `location` | string | No | `resourceGroup().location` | Azure region for all resources |
+| `location` | string | No | `eastus2` | Azure region (restricted to East US 2) |
 | `vmName` | string | No | `thornetlab-ubuntu` | Virtual machine name |
 | `adminUsername` | string | No | `azureuser` | Admin username for the VM |
 | `sshPublicKey` | string | **Yes** | - | SSH public key for VM access |
@@ -54,7 +55,7 @@ cat ~/.ssh/thornetlab_rsa.pub
 
 ```bash
 # Create resource group (if not exists)
-az group create --name thornetlab-rg --location "East US"
+az group create --name thornetlab-rg --location "East US 2"
 
 # Deploy the template
 az deployment group create \
@@ -69,8 +70,7 @@ az deployment group create \
 az deployment group create \
   --resource-group thornetlab-rg \
   --template-file bicep/main.bicep \
-  --parameters location="West US 2" \
-               adminUsername="myuser" \
+  --parameters adminUsername="myuser" \
                sshPublicKey="$(cat ~/.ssh/id_rsa.pub)"
 ```
 

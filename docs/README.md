@@ -63,15 +63,16 @@ The deployment workflow uses GitHub's OIDC provider with Azure for authenticatio
 
 ## Deployment
 
-The infrastructure is deployed automatically via GitHub Actions when changes are pushed to the main branch. The workflow:
+The infrastructure is deployed automatically via GitHub Actions when changes are pushed to the main branch or manually triggered. The workflow:
 
-1. Authenticates using managed identity
-2. Deploys the Bicep template
+1. Authenticates using Azure Service Principal credentials
+2. Deploys the Bicep template to East US 2
 3. Configures the VM with security tools (Microsoft Defender for Endpoint)
+4. Sets up auto-shutdown at 7:00 PM EST daily
 
 ## Resources Created
 
-- Virtual Machine (Ubuntu 20.04 LTS)
+- Virtual Machine (Ubuntu 20.04 LTS) with auto-shutdown at 7:00 PM EST
 - Network Interface
 - System-assigned Managed Identity
 - Custom Script Extension for MDE installation

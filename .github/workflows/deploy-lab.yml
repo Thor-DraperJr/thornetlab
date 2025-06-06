@@ -1,0 +1,92 @@
+# GitHub Actions Workflow for Azure Lab Deployment
+#
+# This workflow deploys the ThorNetLab Azure security lab environment using Bicep templates.
+# It creates an Ubuntu VM in East US 2 with auto-shutdown at 7:00 PM EST and MDE installed.
+#
+# REQUIRED SETUP:
+# 
+# 1. Create an Azure Service Principal with Contributor permissions:
+#    az ad sp create-for-rbac --name "thornetlab-github-actions" \
+#      --role Contributor \
+#      --scopes /subscriptions/{subscription-id} \
+#      --sdk-auth
+#
+# 2. Add the following secrets to your GitHub repository:
+#    - AZURE_CREDENTIALS: The entire JSON output from the az ad sp create-for-rbac command
+#    - SSH_PUBLIC_KEY: Your SSH public key for VM access (e.g., contents of ~/.ssh/id_rsa.pub)
+#    - RESOURCE_GROUP: (Optional) Resource group name, defaults to 'thornetlab-rg'
+#
+# 3. Ensure your service principal has permissions to create resources in the target subscription
+#
+# For more information on setting up Azure credentials for GitHub Actions:
+# https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure
+
+name: Deploy Lab to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      vmSize:
+        description: 'VM Size'
+        required: false
+        default: 'Standard_B2s'
+        type: choice
+        options:
+          - 'Standard_B1s'
+          - 'Standard_B2s'
+          - 'Standard_B4ms'
+      enablePublicIP:
+        description: 'Enable Public IP'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Resource Group
+        run: |
+          RESOURCE_GROUP="${{ secrets.RESOURCE_GROUP || 'thornetlab-rg' }}"
+          az group create \
+            --name "$RESOURCE_GROUP" \
+            --location "East US 2" \
+            --tags project=thornetlab environment=lab
+
+      - name: Deploy Bicep template
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP || 'thornetlab-rg' }}
+          template: ./bicep/main.bicep
+          parameters: |
+            vmName="thornetlab-ubuntu"
+            adminUsername="azureuser"
+            sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}"
+            vmSize="${{ github.event.inputs.vmSize || 'Standard_B2s' }}"
+            enablePublicIP=${{ github.event.inputs.enablePublicIP || true }}
+
+      - name: Display deployment outputs
+        run: |
+          echo "✅ Lab deployment completed successfully!"
+          echo ""
+          echo "📍 Location: East US 2"
+          echo "🕕 Auto-shutdown: 7:00 PM EST daily"
+          echo "🖥️  VM Size: ${{ github.event.inputs.vmSize || 'Standard_B2s' }}"
+          echo ""
+          echo "🔗 Check the Azure portal for deployment outputs including SSH connection details."
+          echo "🔑 Use your SSH private key to connect: ssh azureuser@<vm-fqdn>"
