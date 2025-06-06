@@ -1,0 +1,2217 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.30.23.60470",
+      "templateHash": "5494486849013564372"
+    }
+  },
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "DemoLab",
+      "metadata": {
+        "description": "Name of the main resource group (can't start with \"_\")"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "lab_admin",
+      "metadata": {
+        "description": "Local admin Username for the Virtual Machines"
+      }
+    },
+    "adminWindowsPassword": {
+      "type": "securestring",
+      "minLength": 12,
+      "metadata": {
+        "description": "Password for the Virtual Machine. Password requirements: 12 characters min, 1 lower case, 1 upper case, 1 number, and 1 special character."
+      }
+    },
+    "authenticationType": {
+      "type": "string",
+      "defaultValue": "sshPublicKey",
+      "allowedValues": [
+        "sshPublicKey",
+        "password"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+      }
+    },
+    "adminLinuxPasswordOrKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+      }
+    },
+    "timeZone": {
+      "type": "string",
+      "defaultValue": "Eastern Standard Time",
+      "allowedValues": [
+        "Dateline Standard Time",
+        "UTC-11",
+        "Aleutian Standard Time",
+        "Hawaiian Standard Time",
+        "Marquesas Standard Time",
+        "Alaskan Standard Time",
+        "UTC-09",
+        "Pacific Standard Time (Mexico)",
+        "UTC-08",
+        "Pacific Standard Time",
+        "US Mountain Standard Time",
+        "Mountain Standard Time (Mexico)",
+        "Mountain Standard Time",
+        "Yukon Standard Time",
+        "Central America Standard Time",
+        "Central Standard Time",
+        "Easter Island Standard Time",
+        "Central Standard Time (Mexico)",
+        "Canada Central Standard Time",
+        "SA Pacific Standard Time",
+        "Eastern Standard Time (Mexico)",
+        "Eastern Standard Time",
+        "Haiti Standard Time",
+        "Cuba Standard Time",
+        "US Eastern Standard Time",
+        "Turks And Caicos Standard Time",
+        "Paraguay Standard Time",
+        "Atlantic Standard Time",
+        "Venezuela Standard Time",
+        "Central Brazilian Standard Time",
+        "SA Western Standard Time",
+        "Pacific SA Standard Time",
+        "Newfoundland Standard Time",
+        "Tocantins Standard Time",
+        "E. South America Standard Time",
+        "SA Eastern Standard Time",
+        "Argentina Standard Time",
+        "Montevideo Standard Time",
+        "Magallanes Standard Time",
+        "Saint Pierre Standard Time",
+        "Bahia Standard Time",
+        "UTC-02",
+        "Greenland Standard Time",
+        "Mid-Atlantic Standard Time",
+        "Azores Standard Time",
+        "Cape Verde Standard Time",
+        "UTC",
+        "GMT Standard Time",
+        "Greenwich Standard Time",
+        "Sao Tome Standard Time",
+        "Morocco Standard Time",
+        "W. Europe Standard Time",
+        "Central Europe Standard Time",
+        "Romance Standard Time",
+        "Central European Standard Time",
+        "W. Central Africa Standard Time",
+        "GTB Standard Time",
+        "Middle East Standard Time",
+        "Egypt Standard Time",
+        "E. Europe Standard Time",
+        "West Bank Standard Time",
+        "South Africa Standard Time",
+        "FLE Standard Time",
+        "Israel Standard Time",
+        "South Sudan Standard Time",
+        "Kaliningrad Standard Time",
+        "Sudan Standard Time",
+        "Libya Standard Time",
+        "Namibia Standard Time",
+        "Jordan Standard Time",
+        "Arabic Standard Time",
+        "Syria Standard Time",
+        "Turkey Standard Time",
+        "Arab Standard Time",
+        "Belarus Standard Time",
+        "Russian Standard Time",
+        "E. Africa Standard Time",
+        "Volgograd Standard Time",
+        "Iran Standard Time",
+        "Arabian Standard Time",
+        "Astrakhan Standard Time",
+        "Azerbaijan Standard Time",
+        "Russia Time Zone 3",
+        "Mauritius Standard Time",
+        "Saratov Standard Time",
+        "Georgian Standard Time",
+        "Caucasus Standard Time",
+        "Afghanistan Standard Time",
+        "West Asia Standard Time",
+        "Qyzylorda Standard Time",
+        "Ekaterinburg Standard Time",
+        "Pakistan Standard Time",
+        "India Standard Time",
+        "Sri Lanka Standard Time",
+        "Nepal Standard Time",
+        "Central Asia Standard Time",
+        "Bangladesh Standard Time",
+        "Omsk Standard Time",
+        "Myanmar Standard Time",
+        "SE Asia Standard Time",
+        "Altai Standard Time",
+        "W. Mongolia Standard Time",
+        "North Asia Standard Time",
+        "N. Central Asia Standard Time",
+        "Tomsk Standard Time",
+        "China Standard Time",
+        "North Asia East Standard Time",
+        "Singapore Standard Time",
+        "W. Australia Standard Time",
+        "Taipei Standard Time",
+        "Ulaanbaatar Standard Time",
+        "Aus Central W. Standard Time",
+        "Transbaikal Standard Time",
+        "Tokyo Standard Time",
+        "North Korea Standard Time",
+        "Korea Standard Time",
+        "Yakutsk Standard Time",
+        "Cen. Australia Standard Time",
+        "AUS Central Standard Time",
+        "E. Australia Standard Time",
+        "AUS Eastern Standard Time",
+        "West Pacific Standard Time",
+        "Tasmania Standard Time",
+        "Vladivostok Standard Time",
+        "Lord Howe Standard Time",
+        "Bougainville Standard Time",
+        "Russia Time Zone 10",
+        "Magadan Standard Time",
+        "Norfolk Standard Time",
+        "Sakhalin Standard Time",
+        "Central Pacific Standard Time",
+        "Russia Time Zone 11",
+        "New Zealand Standard Time",
+        "UTC+12",
+        "Fiji Standard Time",
+        "Kamchatka Standard Time",
+        "Chatham Islands Standard Time",
+        "UTC+13",
+        "Tonga Standard Time",
+        "Samoa Standard Time",
+        "Line Islands Standard Time"
+      ],
+      "metadata": {
+        "description": "Specify your timezone. Default: Eastern Standard Time"
+      }
+    },
+    "vmAutoShutdownTime": {
+      "type": "string",
+      "defaultValue": "20:00",
+      "metadata": {
+        "description": "Time of the day to auto-shutdown the vm. In 24h format, eg. 20:00 for 8pm. Default: 8pm"
+      }
+    },
+    "tagCostCenter": {
+      "type": "string",
+      "defaultValue": "Demolab",
+      "metadata": {
+        "description": "Tag name for Cost Center Tag. Helps identify all resources related to this lab."
+      }
+    }
+  },
+  "variables": {
+    "resourceGroupRegion": "[deployment().location]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2024-03-01",
+      "name": "[parameters('resourceGroupName')]",
+      "location": "[variables('resourceGroupRegion')]",
+      "tags": {
+        "CostCenter": "[parameters('tagCostCenter')]",
+        "Workload": "Management"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "Networking-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[variables('resourceGroupRegion')]"
+          },
+          "tagCostCenter": {
+            "value": "[parameters('tagCostCenter')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "11651030619799340592"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "vnetMainName": {
+              "type": "string",
+              "defaultValue": "demolab-vnet"
+            },
+            "vnetAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/16"
+            },
+            "subnet1Prefix": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/24"
+            },
+            "subnet1Name": {
+              "type": "string",
+              "defaultValue": "main"
+            },
+            "subnet2Prefix": {
+              "type": "string",
+              "defaultValue": "10.0.1.0/24"
+            },
+            "subnet2Name": {
+              "type": "string",
+              "defaultValue": "endpoints"
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "demoLab"
+            }
+          },
+          "variables": {
+            "tagWorkload": "network"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2024-01-01",
+              "name": "nsg-Servers",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[variables('tagWorkload')]"
+              },
+              "properties": {
+                "securityRules": []
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2024-01-01",
+              "name": "nsg-Endpoints",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[variables('tagWorkload')]"
+              },
+              "properties": {
+                "securityRules": []
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2024-01-01",
+              "name": "[parameters('vnetMainName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[variables('tagWorkload')]"
+              },
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[parameters('vnetAddressPrefix')]"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "[parameters('subnet1Name')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('subnet1Prefix')]",
+                      "networkSecurityGroup": {
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-Servers')]"
+                      }
+                    }
+                  },
+                  {
+                    "name": "[parameters('subnet2Name')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('subnet2Prefix')]",
+                      "networkSecurityGroup": {
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-Endpoints')]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-Endpoints')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-Servers')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "vnetMain": {
+              "type": "object",
+              "metadata": {
+                "description": "Main vNet created"
+              },
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetMainName')), '2024-01-01', 'full')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "LogAnalytics-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[variables('resourceGroupRegion')]"
+          },
+          "tagCostCenter": {
+            "value": "[parameters('tagCostCenter')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "2907487958165712202"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "LAWorkspaceName": {
+              "type": "string",
+              "defaultValue": "SecurityInsights"
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "demoLab"
+            }
+          },
+          "variables": {
+            "tagWorkload": "loganalytics"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "apiVersion": "2023-09-01",
+              "name": "[parameters('LAWorkspaceName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[variables('tagWorkload')]"
+              },
+              "properties": {
+                "sku": {
+                  "name": "pergb2018"
+                },
+                "retentionInDays": 90
+              }
+            },
+            {
+              "type": "Microsoft.SecurityInsights/onboardingStates",
+              "apiVersion": "2024-03-01",
+              "scope": "[format('Microsoft.OperationalInsights/workspaces/{0}', parameters('LAWorkspaceName'))]",
+              "name": "default",
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('LAWorkspaceName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "LogAnalyticsWorkspaceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('LAWorkspaceName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "VM-DomainController-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "vmName": {
+            "value": "LAB-DC01"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminWindowsPassword')]"
+          },
+          "privateIP": {
+            "value": "10.0.0.4"
+          },
+          "subnetId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup'), '2022-09-01').outputs.vnetMain.value.properties.subnets[0].id]"
+          },
+          "tagWorkload": {
+            "value": "domain_controller"
+          },
+          "timeZone": {
+            "value": "[parameters('timeZone')]"
+          },
+          "vmShutdownTime": {
+            "value": "[parameters('vmAutoShutdownTime')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "15586056858821589148"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "vmName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 15,
+              "metadata": {
+                "description": "Name of the virtual machine."
+              }
+            },
+            "vmSize": {
+              "type": "string",
+              "defaultValue": "Standard_B2ms",
+              "metadata": {
+                "description": "Size of the virtual machine. Default: Standard_B2ms"
+              }
+            },
+            "OSType": {
+              "type": "string",
+              "defaultValue": "Windows Server",
+              "allowedValues": [
+                "Windows Server",
+                "Windows Client"
+              ],
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Default: Windows Server"
+              }
+            },
+            "adminUsername": {
+              "type": "string",
+              "defaultValue": "lab_admin",
+              "metadata": {
+                "description": "Local admin Username for the Virtual Machine. Default: lab_admin"
+              }
+            },
+            "adminPassword": {
+              "type": "securestring",
+              "minLength": 12,
+              "metadata": {
+                "description": "Password for the Virtual Machine."
+              }
+            },
+            "subnetId": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet to attach VM to"
+              }
+            },
+            "privateIP": {
+              "type": "string",
+              "metadata": {
+                "description": "Specify static private IP for VM"
+              }
+            },
+            "privateDNS": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Provide local DNS settings for VM"
+              }
+            },
+            "vmShutdownTime": {
+              "type": "string",
+              "defaultValue": "20:00",
+              "metadata": {
+                "description": "Time of the day to auto-shutdown the vm. In 24h format, eg. 2000 for 8pm. Default: 8pm."
+              }
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "Eastern Standard Time",
+              "metadata": {
+                "description": "Specify your timezone. Default: Eastern Standard Time"
+              }
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "DemoLab",
+              "metadata": {
+                "description": "Tag Cost Center name. Default: Demolab"
+              }
+            },
+            "tagWorkload": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "licenseType": "[if(equals(parameters('OSType'), 'Windows Server'), 'Windows_Server', 'Windows_Client')]",
+            "imagePublisher": "[if(equals(parameters('OSType'), 'Windows Server'), 'MicrosoftWindowsServer', 'microsoftwindowsdesktop')]",
+            "imageOffer": "[if(equals(parameters('OSType'), 'Windows Server'), 'WindowsServer', 'windows-11')]",
+            "imageSKU": "[if(equals(parameters('OSType'), 'Windows Server'), '2022-datacenter-azure-edition-hotpatch', 'win11-23h2-entn')]",
+            "enableHotpatching": "[if(equals(parameters('OSType'), 'Windows Server'), true(), false())]",
+            "patchMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'AutomaticByOS')]",
+            "assessmentMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'ImageDefault')]",
+            "nicName": "[format('{0}-nic', parameters('vmName'))]",
+            "publicIPAllocationMethod": "Static",
+            "publicIpName": "[format('{0}-publicIP', parameters('vmName'))]",
+            "dnsLabelPrefix": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+            "publicIpSku": "Standard",
+            "dnsSettings": {
+              "dnsServers": [
+                "[parameters('privateDNS')]"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('publicIpName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "sku": {
+                "name": "[variables('publicIpSku')]"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAllocationMethod')]",
+                "deleteOption": "Delete",
+                "dnsSettings": {
+                  "domainNameLabel": "[variables('dnsLabelPrefix')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('nicName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAddress": "[parameters('privateIP')]",
+                      "privateIPAllocationMethod": "Static",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]",
+                        "properties": {
+                          "deleteOption": "Delete"
+                        }
+                      },
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      }
+                    }
+                  }
+                ],
+                "dnsSettings": "[if(empty(parameters('privateDNS')), null(), variables('dnsSettings'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('vmName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('vmName')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPassword')]",
+                  "windowsConfiguration": {
+                    "timeZone": "[parameters('timeZone')]",
+                    "patchSettings": {
+                      "patchMode": "[variables('patchMode')]",
+                      "assessmentMode": "[variables('assessmentMode')]",
+                      "enableHotpatching": "[variables('enableHotpatching')]"
+                    }
+                  }
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('imagePublisher')]",
+                    "offer": "[variables('imageOffer')]",
+                    "sku": "[variables('imageSKU')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Premium_LRS"
+                    },
+                    "deleteOption": "Delete"
+                  },
+                  "dataDisks": []
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                      "properties": {
+                        "deleteOption": "Delete"
+                      }
+                    }
+                  ]
+                },
+                "licenseType": "[variables('licenseType')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevTestLab/schedules",
+              "apiVersion": "2018-09-15",
+              "name": "[format('shutdown-computevm-{0}', parameters('vmName'))]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "status": "Enabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                  "time": "[parameters('vmShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('timeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName')), '2022-05-01').dnsSettings.fqdn]"
+            },
+            "vmName": {
+              "type": "string",
+              "value": "[parameters('vmName')]"
+            },
+            "vmID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "VM-MultiPurposeServer-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "vmName": {
+            "value": "LAB-MPS01"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminWindowsPassword')]"
+          },
+          "privateIP": {
+            "value": "10.0.0.5"
+          },
+          "subnetId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup'), '2022-09-01').outputs.vnetMain.value.properties.subnets[0].id]"
+          },
+          "privateDNS": {
+            "value": "10.0.0.4"
+          },
+          "tagWorkload": {
+            "value": "multipurpose_server"
+          },
+          "timeZone": {
+            "value": "[parameters('timeZone')]"
+          },
+          "vmShutdownTime": {
+            "value": "[parameters('vmAutoShutdownTime')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "15586056858821589148"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "vmName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 15,
+              "metadata": {
+                "description": "Name of the virtual machine."
+              }
+            },
+            "vmSize": {
+              "type": "string",
+              "defaultValue": "Standard_B2ms",
+              "metadata": {
+                "description": "Size of the virtual machine. Default: Standard_B2ms"
+              }
+            },
+            "OSType": {
+              "type": "string",
+              "defaultValue": "Windows Server",
+              "allowedValues": [
+                "Windows Server",
+                "Windows Client"
+              ],
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Default: Windows Server"
+              }
+            },
+            "adminUsername": {
+              "type": "string",
+              "defaultValue": "lab_admin",
+              "metadata": {
+                "description": "Local admin Username for the Virtual Machine. Default: lab_admin"
+              }
+            },
+            "adminPassword": {
+              "type": "securestring",
+              "minLength": 12,
+              "metadata": {
+                "description": "Password for the Virtual Machine."
+              }
+            },
+            "subnetId": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet to attach VM to"
+              }
+            },
+            "privateIP": {
+              "type": "string",
+              "metadata": {
+                "description": "Specify static private IP for VM"
+              }
+            },
+            "privateDNS": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Provide local DNS settings for VM"
+              }
+            },
+            "vmShutdownTime": {
+              "type": "string",
+              "defaultValue": "20:00",
+              "metadata": {
+                "description": "Time of the day to auto-shutdown the vm. In 24h format, eg. 2000 for 8pm. Default: 8pm."
+              }
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "Eastern Standard Time",
+              "metadata": {
+                "description": "Specify your timezone. Default: Eastern Standard Time"
+              }
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "DemoLab",
+              "metadata": {
+                "description": "Tag Cost Center name. Default: Demolab"
+              }
+            },
+            "tagWorkload": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "licenseType": "[if(equals(parameters('OSType'), 'Windows Server'), 'Windows_Server', 'Windows_Client')]",
+            "imagePublisher": "[if(equals(parameters('OSType'), 'Windows Server'), 'MicrosoftWindowsServer', 'microsoftwindowsdesktop')]",
+            "imageOffer": "[if(equals(parameters('OSType'), 'Windows Server'), 'WindowsServer', 'windows-11')]",
+            "imageSKU": "[if(equals(parameters('OSType'), 'Windows Server'), '2022-datacenter-azure-edition-hotpatch', 'win11-23h2-entn')]",
+            "enableHotpatching": "[if(equals(parameters('OSType'), 'Windows Server'), true(), false())]",
+            "patchMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'AutomaticByOS')]",
+            "assessmentMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'ImageDefault')]",
+            "nicName": "[format('{0}-nic', parameters('vmName'))]",
+            "publicIPAllocationMethod": "Static",
+            "publicIpName": "[format('{0}-publicIP', parameters('vmName'))]",
+            "dnsLabelPrefix": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+            "publicIpSku": "Standard",
+            "dnsSettings": {
+              "dnsServers": [
+                "[parameters('privateDNS')]"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('publicIpName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "sku": {
+                "name": "[variables('publicIpSku')]"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAllocationMethod')]",
+                "deleteOption": "Delete",
+                "dnsSettings": {
+                  "domainNameLabel": "[variables('dnsLabelPrefix')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('nicName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAddress": "[parameters('privateIP')]",
+                      "privateIPAllocationMethod": "Static",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]",
+                        "properties": {
+                          "deleteOption": "Delete"
+                        }
+                      },
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      }
+                    }
+                  }
+                ],
+                "dnsSettings": "[if(empty(parameters('privateDNS')), null(), variables('dnsSettings'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('vmName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('vmName')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPassword')]",
+                  "windowsConfiguration": {
+                    "timeZone": "[parameters('timeZone')]",
+                    "patchSettings": {
+                      "patchMode": "[variables('patchMode')]",
+                      "assessmentMode": "[variables('assessmentMode')]",
+                      "enableHotpatching": "[variables('enableHotpatching')]"
+                    }
+                  }
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('imagePublisher')]",
+                    "offer": "[variables('imageOffer')]",
+                    "sku": "[variables('imageSKU')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Premium_LRS"
+                    },
+                    "deleteOption": "Delete"
+                  },
+                  "dataDisks": []
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                      "properties": {
+                        "deleteOption": "Delete"
+                      }
+                    }
+                  ]
+                },
+                "licenseType": "[variables('licenseType')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevTestLab/schedules",
+              "apiVersion": "2018-09-15",
+              "name": "[format('shutdown-computevm-{0}', parameters('vmName'))]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "status": "Enabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                  "time": "[parameters('vmShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('timeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName')), '2022-05-01').dnsSettings.fqdn]"
+            },
+            "vmName": {
+              "type": "string",
+              "value": "[parameters('vmName')]"
+            },
+            "vmID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "VM-LinuxServer-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "vmName": {
+            "value": "LAB-LNX01"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "authenticationType": {
+            "value": "[parameters('authenticationType')]"
+          },
+          "adminPasswordOrKey": {
+            "value": "[parameters('adminLinuxPasswordOrKey')]"
+          },
+          "privateIP": {
+            "value": "10.0.0.6"
+          },
+          "subnetId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup'), '2022-09-01').outputs.vnetMain.value.properties.subnets[0].id]"
+          },
+          "tagWorkload": {
+            "value": "linux_server"
+          },
+          "timeZone": {
+            "value": "[parameters('timeZone')]"
+          },
+          "vmShutdownTime": {
+            "value": "[parameters('vmAutoShutdownTime')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "9168954454381850913"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "vmName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 15,
+              "metadata": {
+                "description": "Name of the virtual machine."
+              }
+            },
+            "vmSize": {
+              "type": "string",
+              "defaultValue": "Standard_B2ms",
+              "metadata": {
+                "description": "Size of the virtual machine. Default: Standard_B2ms"
+              }
+            },
+            "adminUsername": {
+              "type": "string",
+              "metadata": {
+                "description": "Username for the Virtual Machine."
+              }
+            },
+            "authenticationType": {
+              "type": "string",
+              "defaultValue": "password",
+              "allowedValues": [
+                "sshPublicKey",
+                "password"
+              ],
+              "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+              }
+            },
+            "adminPasswordOrKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+              }
+            },
+            "subnetId": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet to attach VM to"
+              }
+            },
+            "privateIP": {
+              "type": "string",
+              "metadata": {
+                "description": "Specify static private IP for VM"
+              }
+            },
+            "vmShutdownTime": {
+              "type": "string",
+              "defaultValue": "20:00",
+              "metadata": {
+                "description": "Time of the day to auto-shutdown the vm. In 24h format, eg. 2000 for 8pm. Default: 8pm."
+              }
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "Eastern Standard Time",
+              "metadata": {
+                "description": "Specify your timezone. Default: Eastern Standard Time"
+              }
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "DemoLab",
+              "metadata": {
+                "description": "Tag Cost Center name. Default: Demolab"
+              }
+            },
+            "tagWorkload": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "[format('/home/{0}/.ssh/authorized_keys', parameters('adminUsername'))]",
+                    "keyData": "[parameters('adminPasswordOrKey')]"
+                  }
+                ]
+              }
+            },
+            "nicName": "[format('{0}-nic', parameters('vmName'))]",
+            "publicIPAllocationMethod": "Static",
+            "publicIpName": "[format('{0}-publicIP', parameters('vmName'))]",
+            "dnsLabelPrefix": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+            "publicIpSku": "Standard"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('publicIpName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "sku": {
+                "name": "[variables('publicIpSku')]"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAllocationMethod')]",
+                "deleteOption": "Delete",
+                "dnsSettings": {
+                  "domainNameLabel": "[variables('dnsLabelPrefix')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('nicName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAddress": "[parameters('privateIP')]",
+                      "privateIPAllocationMethod": "Static",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]",
+                        "properties": {
+                          "deleteOption": "Delete"
+                        }
+                      },
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-09-01",
+              "name": "[parameters('vmName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('vmName')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPasswordOrKey')]",
+                  "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "canonical",
+                    "offer": "ubuntu-24_04-lts",
+                    "sku": "server",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Premium_LRS"
+                    },
+                    "deleteOption": "Delete"
+                  },
+                  "dataDisks": []
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                      "properties": {
+                        "deleteOption": "Delete"
+                      }
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {}
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevTestLab/schedules",
+              "apiVersion": "2018-09-15",
+              "name": "[format('shutdown-computevm-{0}', parameters('vmName'))]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "status": "Enabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                  "time": "[parameters('vmShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('timeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName')), '2022-05-01').dnsSettings.fqdn]"
+            },
+            "vmName": {
+              "type": "string",
+              "value": "[parameters('vmName')]"
+            },
+            "vmID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "VM-WindowsClient-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "OSType": {
+            "value": "Windows Client"
+          },
+          "vmName": {
+            "value": "LAB-USR01"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminWindowsPassword')]"
+          },
+          "privateIP": {
+            "value": "10.0.1.4"
+          },
+          "subnetId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup'), '2022-09-01').outputs.vnetMain.value.properties.subnets[1].id]"
+          },
+          "privateDNS": {
+            "value": "10.0.0.4"
+          },
+          "tagWorkload": {
+            "value": "endpoint"
+          },
+          "timeZone": {
+            "value": "[parameters('timeZone')]"
+          },
+          "vmShutdownTime": {
+            "value": "[parameters('vmAutoShutdownTime')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "15586056858821589148"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "vmName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 15,
+              "metadata": {
+                "description": "Name of the virtual machine."
+              }
+            },
+            "vmSize": {
+              "type": "string",
+              "defaultValue": "Standard_B2ms",
+              "metadata": {
+                "description": "Size of the virtual machine. Default: Standard_B2ms"
+              }
+            },
+            "OSType": {
+              "type": "string",
+              "defaultValue": "Windows Server",
+              "allowedValues": [
+                "Windows Server",
+                "Windows Client"
+              ],
+              "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Default: Windows Server"
+              }
+            },
+            "adminUsername": {
+              "type": "string",
+              "defaultValue": "lab_admin",
+              "metadata": {
+                "description": "Local admin Username for the Virtual Machine. Default: lab_admin"
+              }
+            },
+            "adminPassword": {
+              "type": "securestring",
+              "minLength": 12,
+              "metadata": {
+                "description": "Password for the Virtual Machine."
+              }
+            },
+            "subnetId": {
+              "type": "string",
+              "metadata": {
+                "description": "Subnet to attach VM to"
+              }
+            },
+            "privateIP": {
+              "type": "string",
+              "metadata": {
+                "description": "Specify static private IP for VM"
+              }
+            },
+            "privateDNS": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Provide local DNS settings for VM"
+              }
+            },
+            "vmShutdownTime": {
+              "type": "string",
+              "defaultValue": "20:00",
+              "metadata": {
+                "description": "Time of the day to auto-shutdown the vm. In 24h format, eg. 2000 for 8pm. Default: 8pm."
+              }
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "Eastern Standard Time",
+              "metadata": {
+                "description": "Specify your timezone. Default: Eastern Standard Time"
+              }
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "DemoLab",
+              "metadata": {
+                "description": "Tag Cost Center name. Default: Demolab"
+              }
+            },
+            "tagWorkload": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "licenseType": "[if(equals(parameters('OSType'), 'Windows Server'), 'Windows_Server', 'Windows_Client')]",
+            "imagePublisher": "[if(equals(parameters('OSType'), 'Windows Server'), 'MicrosoftWindowsServer', 'microsoftwindowsdesktop')]",
+            "imageOffer": "[if(equals(parameters('OSType'), 'Windows Server'), 'WindowsServer', 'windows-11')]",
+            "imageSKU": "[if(equals(parameters('OSType'), 'Windows Server'), '2022-datacenter-azure-edition-hotpatch', 'win11-23h2-entn')]",
+            "enableHotpatching": "[if(equals(parameters('OSType'), 'Windows Server'), true(), false())]",
+            "patchMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'AutomaticByOS')]",
+            "assessmentMode": "[if(equals(parameters('OSType'), 'Windows Server'), 'AutomaticByPlatform', 'ImageDefault')]",
+            "nicName": "[format('{0}-nic', parameters('vmName'))]",
+            "publicIPAllocationMethod": "Static",
+            "publicIpName": "[format('{0}-publicIP', parameters('vmName'))]",
+            "dnsLabelPrefix": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+            "publicIpSku": "Standard",
+            "dnsSettings": {
+              "dnsServers": [
+                "[parameters('privateDNS')]"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('publicIpName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "sku": {
+                "name": "[variables('publicIpSku')]"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAllocationMethod')]",
+                "deleteOption": "Delete",
+                "dnsSettings": {
+                  "domainNameLabel": "[variables('dnsLabelPrefix')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2022-05-01",
+              "name": "[variables('nicName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAddress": "[parameters('privateIP')]",
+                      "privateIPAllocationMethod": "Static",
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]",
+                        "properties": {
+                          "deleteOption": "Delete"
+                        }
+                      },
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      }
+                    }
+                  }
+                ],
+                "dnsSettings": "[if(empty(parameters('privateDNS')), null(), variables('dnsSettings'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('vmName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('vmName')]",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPassword')]",
+                  "windowsConfiguration": {
+                    "timeZone": "[parameters('timeZone')]",
+                    "patchSettings": {
+                      "patchMode": "[variables('patchMode')]",
+                      "assessmentMode": "[variables('assessmentMode')]",
+                      "enableHotpatching": "[variables('enableHotpatching')]"
+                    }
+                  }
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('imagePublisher')]",
+                    "offer": "[variables('imageOffer')]",
+                    "sku": "[variables('imageSKU')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Premium_LRS"
+                    },
+                    "deleteOption": "Delete"
+                  },
+                  "dataDisks": []
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+                      "properties": {
+                        "deleteOption": "Delete"
+                      }
+                    }
+                  ]
+                },
+                "licenseType": "[variables('licenseType')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevTestLab/schedules",
+              "apiVersion": "2018-09-15",
+              "name": "[format('shutdown-computevm-{0}', parameters('vmName'))]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "status": "Enabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                  "time": "[parameters('vmShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('timeZone')]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName')), '2022-05-01').dnsSettings.fqdn]"
+            },
+            "vmName": {
+              "type": "string",
+              "value": "[parameters('vmName')]"
+            },
+            "vmID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'Networking-setup')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "backup-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "timeZone": {
+            "value": "[parameters('timeZone')]"
+          },
+          "tagWorkload": {
+            "value": "backup"
+          },
+          "vmBackupList": {
+            "value": [
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-DomainController-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-MultiPurposeServer-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-LinuxServer-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-WindowsClient-setup'), '2022-09-01').outputs.vmName.value]"
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "14743399649361987110"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "backupVaultName": {
+              "type": "string",
+              "defaultValue": "DemoLab-BackupVault"
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "UTC"
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "demoLab"
+            },
+            "tagWorkload": {
+              "type": "string"
+            },
+            "vmBackupList": {
+              "type": "array"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.RecoveryServices/vaults",
+              "apiVersion": "2024-04-01",
+              "name": "[parameters('backupVaultName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "sku": {
+                "name": "RS0",
+                "tier": "Standard"
+              },
+              "properties": {
+                "securitySettings": {
+                  "softDeleteSettings": {
+                    "softDeleteRetentionPeriodInDays": 14,
+                    "softDeleteState": "Enabled",
+                    "enhancedSecurityState": "Enabled"
+                  }
+                },
+                "redundancySettings": {
+                  "standardTierStorageRedundancy": "LocallyRedundant",
+                  "crossRegionRestore": "Disabled"
+                },
+                "publicNetworkAccess": "Enabled",
+                "restoreSettings": {
+                  "crossSubscriptionRestoreSettings": {
+                    "crossSubscriptionRestoreState": "Enabled"
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+              "apiVersion": "2024-04-01",
+              "name": "[format('{0}/{1}', parameters('backupVaultName'), format('{0}-vm-backup-policy', resourceGroup().name))]",
+              "properties": {
+                "backupManagementType": "AzureIaasVM",
+                "policyType": "V1",
+                "instantRPDetails": {
+                  "azureBackupRGNamePrefix": "[format('{0}-Backup', resourceGroup().name)]"
+                },
+                "schedulePolicy": {
+                  "schedulePolicyType": "SimpleSchedulePolicy",
+                  "scheduleRunFrequency": "Daily",
+                  "scheduleRunTimes": [
+                    "2024-08-12T18:00:00Z"
+                  ],
+                  "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                  "retentionPolicyType": "LongTermRetentionPolicy",
+                  "dailySchedule": {
+                    "retentionTimes": [
+                      "2024-08-12T18:00:00Z"
+                    ],
+                    "retentionDuration": {
+                      "count": 30,
+                      "durationType": "Days"
+                    }
+                  }
+                },
+                "tieringPolicy": {
+                  "ArchivedRP": {
+                    "tieringMode": "DoNotTier",
+                    "duration": 0,
+                    "durationType": "Invalid"
+                  }
+                },
+                "instantRpRetentionRangeInDays": 3,
+                "timeZone": "[parameters('timeZone')]",
+                "protectedItemsCount": 0
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('backupVaultName'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "vmBackupItems",
+                "count": "[length(parameters('vmBackupList'))]"
+              },
+              "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems",
+              "apiVersion": "2024-04-01",
+              "name": "[format('{0}/Azure/iaasvmcontainer;iaasvmcontainerv2;{1};{2}/vm;iaasvmcontainerv2;{3};{4}', parameters('backupVaultName'), resourceGroup().name, parameters('vmBackupList')[copyIndex()], resourceGroup().name, parameters('vmBackupList')[copyIndex()])]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostArea": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "protectedItemType": "Microsoft.Compute/virtualMachines",
+                "policyId": "[resourceId('Microsoft.RecoveryServices/vaults/backupPolicies', parameters('backupVaultName'), format('{0}-vm-backup-policy', resourceGroup().name))]",
+                "sourceResourceId": "[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.Compute/virtualMachines', parameters('vmBackupList')[copyIndex()])]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/backupPolicies', parameters('backupVaultName'), format('{0}-vm-backup-policy', resourceGroup().name))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-DomainController-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-LinuxServer-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-MultiPurposeServer-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-WindowsClient-setup')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "VMAutomation-setup",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "tagWorkload": {
+            "value": "logicapp"
+          },
+          "vmIDs": {
+            "value": [
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-DomainController-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-MultiPurposeServer-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-LinuxServer-setup'), '2022-09-01').outputs.vmName.value]",
+              "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-WindowsClient-setup'), '2022-09-01').outputs.vmName.value]"
+            ]
+          },
+          "LogAnalyticsWorkspaceID": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'LogAnalytics-setup'), '2022-09-01').outputs.LogAnalyticsWorkspaceId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "13434687771808910010"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "LogicAppName": {
+              "type": "string",
+              "defaultValue": "VMManager-LogicApp"
+            },
+            "LogicAppAPIConnectionDisplayName": {
+              "type": "string",
+              "defaultValue": "LogicApp VM API connector"
+            },
+            "timeZone": {
+              "type": "string",
+              "defaultValue": "Eastern Standard Time",
+              "metadata": {
+                "description": "Specify your timezone. Default: Eastern Standard Time"
+              }
+            },
+            "startHour": {
+              "type": "string",
+              "defaultValue": "8"
+            },
+            "vmIDs": {
+              "type": "array"
+            },
+            "logicAppsDiagnosticSettingsName": {
+              "type": "string",
+              "defaultValue": "LogicApps-Logging"
+            },
+            "LogAnalyticsWorkspaceID": {
+              "type": "string"
+            },
+            "tagCostCenter": {
+              "type": "string",
+              "defaultValue": "DemoLab"
+            },
+            "tagWorkload": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "roleDefinitionId": "9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+            "pathPrefix": "[format('/subscriptions/@{{encodeURIComponent(''{0}'')}}/resourcegroups/@{{encodeURIComponent(''{1}'')}}/providers/Microsoft.Compute/virtualMachines/@{{encodeURIComponent(''', subscription().subscriptionId, resourceGroup().name)]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/connections",
+              "apiVersion": "2016-06-01",
+              "name": "azurevm",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "properties": {
+                "displayName": "[parameters('LogicAppAPIConnectionDisplayName')]",
+                "alternativeParameterValues": {},
+                "parameterValueType": "Alternative",
+                "api": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'azurevm')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Logic/workflows",
+              "apiVersion": "2019-05-01",
+              "name": "[parameters('LogicAppName')]",
+              "location": "[parameters('location')]",
+              "tags": {
+                "CostCenter": "[parameters('tagCostCenter')]",
+                "Workload": "[parameters('tagWorkload')]"
+              },
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "state": "Enabled",
+                "definition": {
+                  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "$connections": {
+                      "defaultValue": {},
+                      "type": "Object"
+                    }
+                  },
+                  "triggers": {
+                    "Recurrence": {
+                      "recurrence": {
+                        "interval": 1,
+                        "frequency": "Week",
+                        "timeZone": "[parameters('timeZone')]",
+                        "schedule": {
+                          "weekDays": [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday"
+                          ],
+                          "hours": [
+                            "[parameters('startHour')]"
+                          ]
+                        }
+                      },
+                      "evaluatedRecurrence": {
+                        "interval": 1,
+                        "frequency": "Week",
+                        "timeZone": "[parameters('timeZone')]",
+                        "schedule": {
+                          "weekDays": [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday"
+                          ],
+                          "hours": [
+                            "[parameters('startHour')]"
+                          ]
+                        }
+                      },
+                      "type": "Recurrence"
+                    }
+                  },
+                  "actions": {
+                    "Start-VM-DomainController": {
+                      "runAfter": {},
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azurevm']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "[format('{0}{1}'')}}/start', variables('pathPrefix'), parameters('vmIDs')[0])]",
+                        "queries": {
+                          "api-version": "2019-12-01"
+                        }
+                      }
+                    },
+                    "Delay": {
+                      "runAfter": {
+                        "Start-VM-DomainController": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "Wait",
+                      "inputs": {
+                        "interval": {
+                          "count": 2,
+                          "unit": "Minute"
+                        }
+                      }
+                    },
+                    "Start-VM-MPS": {
+                      "runAfter": {
+                        "Delay": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azurevm']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "[format('{0}{1}'')}}/start', variables('pathPrefix'), parameters('vmIDs')[1])]",
+                        "queries": {
+                          "api-version": "2019-12-01"
+                        }
+                      }
+                    },
+                    "Start-VM-LNX": {
+                      "runAfter": {
+                        "Start-VM-MPS": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azurevm']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "[format('{0}{1}'')}}/start', variables('pathPrefix'), parameters('vmIDs')[2])]",
+                        "queries": {
+                          "api-version": "2019-12-01"
+                        }
+                      }
+                    },
+                    "Start-VM-USR": {
+                      "runAfter": {
+                        "Start-VM-LNX": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azurevm']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "[format('{0}{1}'')}}/start', variables('pathPrefix'), parameters('vmIDs')[3])]",
+                        "queries": {
+                          "api-version": "2019-12-01"
+                        }
+                      }
+                    }
+                  },
+                  "outputs": {}
+                },
+                "parameters": {
+                  "$connections": {
+                    "value": {
+                      "azurevm": {
+                        "connectionId": "[resourceId('Microsoft.Web/connections', 'azurevm')]",
+                        "connectionName": "azurevm",
+                        "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'azurevm')]",
+                        "connectionProperties": {
+                          "authentication": {
+                            "type": "ManagedServiceIdentity"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', 'azurevm')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "name": "[guid(format('ra-logicapp-{0}', variables('roleDefinitionId')))]",
+              "properties": {
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionId'))]",
+                "principalId": "[reference(resourceId('Microsoft.Logic/workflows', parameters('LogicAppName')), '2019-05-01', 'full').identity.principalId]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('LogicAppName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Insights/diagnosticSettings",
+              "apiVersion": "2021-05-01-preview",
+              "scope": "[format('Microsoft.Logic/workflows/{0}', parameters('LogicAppName'))]",
+              "name": "[parameters('logicAppsDiagnosticSettingsName')]",
+              "properties": {
+                "workspaceId": "[parameters('LogAnalyticsWorkspaceID')]",
+                "logs": [
+                  {
+                    "category": null,
+                    "categoryGroup": "allLogs",
+                    "enabled": true
+                  }
+                ],
+                "metrics": [
+                  {
+                    "enabled": true,
+                    "category": "AllMetrics"
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Logic/workflows', parameters('LogicAppName'))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'LogAnalytics-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-DomainController-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-LinuxServer-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-MultiPurposeServer-setup')]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-WindowsClient-setup')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "vmDCname": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-DomainController-setup'), '2022-09-01').outputs.hostname.value]"
+    },
+    "vmMPSname": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-MultiPurposeServer-setup'), '2022-09-01').outputs.hostname.value]"
+    },
+    "vmUSRname": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-WindowsClient-setup'), '2022-09-01').outputs.hostname.value]"
+    },
+    "vmLNXname": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'VM-LinuxServer-setup'), '2022-09-01').outputs.hostname.value]"
+    }
+  }
+}
